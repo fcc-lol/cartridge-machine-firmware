@@ -20,16 +20,16 @@ const URL_PARAM_TO_APP_MAPPING = {
 };
 
 const AppContainer = styled.div`
-  width: calc(100vw - 2.25rem);
-  height: calc(100vh - 2.25rem);
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   margin: 0;
   position: absolute;
   right: 0;
   bottom: 0;
-  top: 15px;
-  left: 20px;
-  border-radius: 1rem;
+  top: 0;
+  left: 0;
+  border-radius: 0;
   background: black;
 `;
 
