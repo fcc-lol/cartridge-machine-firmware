@@ -1,7 +1,7 @@
 {
-  "app_id": "cartridge-machine",
+  "app_id": "cartridge-machine-firmware",
   "app_name": "Cartridge Machine",
-  "domain": "https://cartridge-machine.fcc.lol",
+  "domain": "https://cartridge-machine-firmware.fcc.lol",
   "author": "fcc",
   "created_on": "Fri Jul  4 00:21:39 UTC 2025"
 }

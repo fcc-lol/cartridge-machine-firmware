@@ -1,5 +1,5 @@
 {
-  "name": "cartridge-machine",
+  "name": "cartridge-machine-firmware",
   "homepage": "./",
   "version": "0.1.0",
   "private": false,
@@ -34,4 +34,3 @@
     ]
   }
 }
-
