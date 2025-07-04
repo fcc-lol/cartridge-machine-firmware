@@ -1,0 +1,170 @@
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+
+import ColorCycle from "./Apps/ColorCycle";
+import EarthViewer from "./Apps/EarthViewer";
+
+const CARTRIDGE_TO_APP_MAPPING = {
+  "0008476736": ColorCycle,
+  "0026319016": EarthViewer,
+  "0009684980": ColorCycle,
+  "0008852762": EarthViewer,
+  "0008708792": ColorCycle,
+  "0009813102": EarthViewer
+};
+
+// URL parameter to app mapping
+const URL_PARAM_TO_APP_MAPPING = {
+  ColorCycle: ColorCycle,
+  EarthViewer: EarthViewer
+};
+
+const AppContainer = styled.div`
+  width: calc(100vw - 2.25rem);
+  height: calc(100vh - 2.25rem);
+  overflow: hidden;
+  margin: 0;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 15px;
+  left: 20px;
+  border-radius: 1rem;
+  background: black;
+`;
+
+const Instructions = styled.div`
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  margin-top: -1rem;
+`;
+
+function App() {
+  const [currentInput, setCurrentInput] = useState("");
+  const [activeApp, setActiveApp] = useState(null);
+  const [lastKeyTime, setLastKeyTime] = useState(0);
+
+  // Function to get URL parameters
+  const getUrlParam = (param) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  };
+
+  // Check for URL parameters on component mount and handle URL changes
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const appParam = getUrlParam("app");
+      if (appParam && URL_PARAM_TO_APP_MAPPING[appParam]) {
+        setActiveApp(`url_${appParam}`);
+      } else {
+        // If no valid app param, reset to default state
+        setActiveApp(null);
+      }
+    };
+
+    // Check initial URL
+    handleUrlChange();
+
+    // Listen for browser back/forward navigation
+    window.addEventListener("popstate", handleUrlChange);
+
+    // Cleanup listener
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+    };
+  }, []);
+
+  // Handle keyboard input
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const now = Date.now();
+
+      // Reset input if more than 2 seconds since last key
+      if (now - lastKeyTime > 2000) {
+        setCurrentInput("");
+      }
+
+      setLastKeyTime(now);
+
+      // Only handle number keys
+      if (event.key >= "0" && event.key <= "9") {
+        event.preventDefault();
+
+        const newInput = currentInput + event.key;
+        setCurrentInput(newInput);
+
+        // Check if the input matches any app ID
+        if (CARTRIDGE_TO_APP_MAPPING[newInput]) {
+          setActiveApp(newInput);
+          setCurrentInput(""); // Clear input after successful match
+
+          // Update URL to reflect the app (find the corresponding URL param)
+          const appComponent = CARTRIDGE_TO_APP_MAPPING[newInput];
+          const urlParam = Object.keys(URL_PARAM_TO_APP_MAPPING).find(
+            (key) => URL_PARAM_TO_APP_MAPPING[key] === appComponent
+          );
+          if (urlParam) {
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set("app", urlParam);
+            window.history.pushState({}, "", newUrl);
+          }
+        }
+      }
+    };
+
+    // Add event listener to document
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentInput, lastKeyTime, activeApp]);
+
+  useEffect(() => {
+    if (currentInput) {
+      const timer = setTimeout(() => {
+        setCurrentInput("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentInput]);
+
+  // Render the active app
+  if (activeApp) {
+    let AppComponent = null;
+
+    // Check if it's a URL parameter app
+    if (activeApp.startsWith("url_")) {
+      const appName = activeApp.replace("url_", "");
+      AppComponent = URL_PARAM_TO_APP_MAPPING[appName];
+    } else {
+      // Check if it's a cartridge ID app
+      AppComponent = CARTRIDGE_TO_APP_MAPPING[activeApp];
+    }
+
+    if (AppComponent) {
+      return (
+        <AppContainer>
+          <AppComponent />
+        </AppContainer>
+      );
+    }
+  }
+
+  // Render the app selector
+  return (
+    <AppContainer>
+      <Instructions>Insert a cartridge</Instructions>
+    </AppContainer>
+  );
+}
+
+export default App;
