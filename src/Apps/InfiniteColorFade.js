@@ -27,7 +27,7 @@ const ColorInfo = styled.div`
   pointer-events: none;
 `;
 
-const ColorCycle = () => {
+const InfiniteColorFade = () => {
   const [hue, setHue] = useState(0);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -105,4 +105,4 @@ const ColorCycle = () => {
   );
 };
 
-export default ColorCycle;
+export default InfiniteColorFade;

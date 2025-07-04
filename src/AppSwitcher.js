@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import ColorCycle from "./Apps/ColorCycle";
-import EarthViewer from "./Apps/EarthViewer";
-
-const CARTRIDGE_TO_APP_MAPPING = {
-  "0008476736": ColorCycle,
-  "0026319016": EarthViewer,
-  "0009684980": ColorCycle,
-  "0008852762": EarthViewer,
-  "0008708792": ColorCycle,
-  "0009813102": EarthViewer
+// Dynamically import all apps from the Apps directory
+const importAll = (r) => {
+  let apps = {};
+  r.keys().forEach((item, index) => {
+    const appName = item.replace("./", "").replace(".js", "");
+    apps[appName] = r(item).default;
+  });
+  return apps;
 };
 
-// URL parameter to app mapping
-const URL_PARAM_TO_APP_MAPPING = {
-  ColorCycle: ColorCycle,
-  EarthViewer: EarthViewer
+const APPS = importAll(require.context("./apps", false, /\.js$/));
+
+const CARTRIDGE_TO_APP_MAPPING = {
+  "0008476736": APPS.InfiniteColorFade,
+  "0026319016": APPS.WholeEarthSatelliteImage,
+  "0009684980": APPS.InfiniteColorFade,
+  "0008852762": APPS.WholeEarthSatelliteImage,
+  "0008708792": APPS.InfiniteColorFade,
+  "0009813102": APPS.WholeEarthSatelliteImage,
+  "0007654321": APPS.USWeatherMap
 };
 
 const AppContainer = styled.div`
@@ -61,7 +65,7 @@ function App() {
   useEffect(() => {
     const handleUrlChange = () => {
       const appParam = getUrlParam("app");
-      if (appParam && URL_PARAM_TO_APP_MAPPING[appParam]) {
+      if (appParam && APPS[appParam]) {
         setActiveApp(`url_${appParam}`);
       } else {
         // If no valid app param, reset to default state
@@ -107,8 +111,8 @@ function App() {
 
           // Update URL to reflect the app (find the corresponding URL param)
           const appComponent = CARTRIDGE_TO_APP_MAPPING[newInput];
-          const urlParam = Object.keys(URL_PARAM_TO_APP_MAPPING).find(
-            (key) => URL_PARAM_TO_APP_MAPPING[key] === appComponent
+          const urlParam = Object.keys(APPS).find(
+            (key) => APPS[key] === appComponent
           );
           if (urlParam) {
             const newUrl = new URL(window.location);
@@ -144,7 +148,7 @@ function App() {
     // Check if it's a URL parameter app
     if (activeApp.startsWith("url_")) {
       const appName = activeApp.replace("url_", "");
-      AppComponent = URL_PARAM_TO_APP_MAPPING[appName];
+      AppComponent = APPS[appName];
     } else {
       // Check if it's a cartridge ID app
       AppComponent = CARTRIDGE_TO_APP_MAPPING[activeApp];

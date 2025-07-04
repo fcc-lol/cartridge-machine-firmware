@@ -16,7 +16,6 @@ const EarthImageContainer = styled.div`
 
 const EarthImage = styled.img`
   width: 80%;
-  margin-left: -2rem;
 `;
 
 const InfoPanel = styled.div`
@@ -32,7 +31,9 @@ const InfoPanel = styled.div`
 `;
 
 const DateDisplay = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
   font-family: "Courier New", Courier, monospace;
 `;
 
@@ -48,7 +49,7 @@ const ErrorMessage = styled.div`
   z-index: 1;
 `;
 
-function EarthViewer() {
+function WholeEarthSatelliteImage() {
   const [images, setImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -133,4 +134,4 @@ function EarthViewer() {
   );
 }
 
-export default EarthViewer;
+export default WholeEarthSatelliteImage;
