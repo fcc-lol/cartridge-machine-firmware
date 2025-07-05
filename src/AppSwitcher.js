@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import CARTRIDGES from "./config/cartridges.json";
 
 // Dynamically import all apps from the Apps directory
 const importAll = (r) => {
@@ -13,15 +14,17 @@ const importAll = (r) => {
 
 const APPS = importAll(require.context("./apps", false, /\.js$/));
 
-const CARTRIDGE_TO_APP_MAPPING = {
-  "0008476736": APPS.InfiniteColorFade,
-  "0026319016": APPS.WholeEarthSatelliteImage,
-  "0009684980": APPS.InfiniteColorFade,
-  "0008852762": APPS.WholeEarthSatelliteImage,
-  "0008708792": APPS.InfiniteColorFade,
-  "0009813102": APPS.WholeEarthSatelliteImage,
-  "0007654321": APPS.USWeatherMap
-};
+// Build the cartridge-to-app mapping using the config and imported apps
+const CARTRIDGE_TO_APP_MAPPING = Object.keys(CARTRIDGES).reduce(
+  (acc, cartridgeId) => {
+    const appName = CARTRIDGES[cartridgeId].app;
+    if (APPS[appName]) {
+      acc[cartridgeId] = APPS[appName];
+    }
+    return acc;
+  },
+  {}
+);
 
 const AppContainer = styled.div`
   width: 100vw;
