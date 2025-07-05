@@ -82,6 +82,9 @@ function App() {
     // Listen for browser back/forward navigation
     window.addEventListener("popstate", handleUrlChange);
 
+    // Ensure the window has focus for immediate keyboard input
+    window.focus();
+
     // Cleanup listener
     return () => {
       window.removeEventListener("popstate", handleUrlChange);
