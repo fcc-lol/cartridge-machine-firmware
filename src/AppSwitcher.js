@@ -7,13 +7,18 @@ import { Instructions } from "./components/Instructions";
 const importAll = (r) => {
   let apps = {};
   r.keys().forEach((item, index) => {
+    console.log("Importing app file:", item);
     const appName = item.replace("./", "").replace(".js", "");
+    console.log("App name:", appName);
     apps[appName] = r(item).default;
   });
   return apps;
 };
 
 const APPS = importAll(require.context("./apps", false, /\.js$/));
+
+console.log("Loaded apps:", Object.keys(APPS));
+console.log("AircraftOverhead available:", !!APPS["AircraftOverhead"]);
 
 // Build the cartridge-to-app mapping using the config and imported apps
 const CARTRIDGE_TO_APP_MAPPING = Object.keys(CARTRIDGES).reduce(
@@ -56,9 +61,15 @@ function App() {
   useEffect(() => {
     const handleUrlChange = () => {
       const appParam = getUrlParam("app");
+      console.log("URL app param:", appParam);
+      console.log("APPS available:", Object.keys(APPS));
+      console.log("APPS[appParam]:", APPS[appParam]);
+
       if (appParam && APPS[appParam]) {
+        console.log("Setting active app to:", `url_${appParam}`);
         setActiveApp(`url_${appParam}`);
       } else {
+        console.log("No valid app param, resetting to default");
         // If no valid app param, reset to default state
         setActiveApp(null);
       }
