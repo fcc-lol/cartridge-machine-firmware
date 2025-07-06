@@ -27,7 +27,7 @@
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "InfiniteColorFade"
+    "app": "AircraftOverhead"
   },
   "0008721413": {
     "color": "RED",
@@ -110,13 +110,13 @@
     "color": "BLUE",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "InfiniteColorFade"
+    "app": "WholeEarthSatelliteImage"
   },
   "0008502093": {
     "color": "BLUE",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "InfiniteColorFade"
+    "app": "USWeatherMap"
   },
   "0010184850": {
     "color": "BLUE",
