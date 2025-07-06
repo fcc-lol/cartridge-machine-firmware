@@ -116,17 +116,36 @@ const AircraftInfoOverlay = ({ aircraft, formatAltitude, formatSpeed }) => {
 
   useEffect(() => {
     const updatePositions = () => {
+      // Check if map is loaded and ready
+      if (!map || !map.getSize || !map.getSize().x) {
+        return;
+      }
+
       const newPositions = {};
       aircraft.forEach((plane, index) => {
         if (plane.lat && plane.lon) {
-          const point = map.latLngToContainerPoint([plane.lat, plane.lon]);
-          newPositions[plane.hex || index] = point;
+          try {
+            const point = map.latLngToContainerPoint([plane.lat, plane.lon]);
+            newPositions[plane.id || index] = point;
+          } catch (error) {
+            // Map might not be ready yet, skip this update
+            console.warn("Map not ready for position calculation:", error);
+          }
         }
       });
       setPositions(newPositions);
     };
 
-    updatePositions();
+    // Wait for map to be ready before calculating positions
+    const checkMapReady = () => {
+      if (map && map.getSize && map.getSize().x > 0) {
+        updatePositions();
+      } else {
+        setTimeout(checkMapReady, 100);
+      }
+    };
+
+    checkMapReady();
 
     const handleMapEvents = () => {
       updatePositions();
@@ -146,7 +165,7 @@ const AircraftInfoOverlay = ({ aircraft, formatAltitude, formatSpeed }) => {
   return (
     <>
       {aircraft.map((plane, index) => {
-        const key = plane.hex || index;
+        const key = plane.id || index;
         const position = positions[key];
 
         if (!position) return null;
@@ -159,12 +178,12 @@ const AircraftInfoOverlay = ({ aircraft, formatAltitude, formatSpeed }) => {
               top: position.y - 7
             }}
           >
-            {plane.flight && <InfoLine>{plane.flight.trim()}</InfoLine>}
-            {plane.t && <InfoLine>{plane.t}</InfoLine>}
-            {plane.alt_baro && (
-              <InfoLine>{formatAltitude(plane.alt_baro)}</InfoLine>
+            {plane.flight && <InfoLine>{plane.flight}</InfoLine>}
+            {plane.type && <InfoLine>{plane.type}</InfoLine>}
+            {plane.altitude && (
+              <InfoLine>{formatAltitude(plane.altitude)}</InfoLine>
             )}
-            {plane.gs && <InfoLine>{formatSpeed(plane.gs)}</InfoLine>}
+            {plane.speed && <InfoLine>{formatSpeed(plane.speed)}</InfoLine>}
           </InfoBox>
         );
       })}
@@ -198,9 +217,9 @@ const AircraftOverhead = ({ fccApiKey }) => {
       }
 
       const data = await response.json();
-      setAircraft(data.ac || []);
-      if (data.location) {
-        setLocation([data.location.lat, data.location.lng]);
+      setAircraft(data.aircraft || []);
+      if (data.metadata && data.metadata.location) {
+        setLocation([data.metadata.location.lat, data.metadata.location.lng]);
       }
     } catch (err) {
       console.error("Error fetching aircraft data:", err);
@@ -228,7 +247,7 @@ const AircraftOverhead = ({ fccApiKey }) => {
     return "Unknown";
   };
 
-  if (loading && !location) {
+  if (loading) {
     return (
       <Container>
         <Loading />
@@ -236,29 +255,17 @@ const AircraftOverhead = ({ fccApiKey }) => {
     );
   }
 
-  // If we don't have location data yet, show loading
-  if (!location) {
-    return (
-      <Container>
-        <Loading />
-      </Container>
-    );
-  }
+  // If we don't have location data yet, use a default location
+  const defaultLocation = location || [40.7128, -74.006]; // Default to NYC coordinates
 
-  // Get aircraft with coordinates for map markers, excluding ground aircraft
-  const aircraftWithCoords = aircraft.filter(
-    (plane) =>
-      plane.lat &&
-      plane.lon &&
-      plane.alt_baro !== "ground" &&
-      plane.alt_baro > 0
-  );
+  // Get aircraft with coordinates for map markers
+  const aircraftWithCoords = aircraft.filter((plane) => plane.lat && plane.lon);
 
   return (
     <Container>
       <MapWrapper>
         <MapContainer
-          center={location}
+          center={defaultLocation}
           zoom={11}
           zoomControl={false}
           scrollWheelZoom={false}
@@ -271,12 +278,12 @@ const AircraftOverhead = ({ fccApiKey }) => {
             url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
             opacity={0.15}
           />
-          <RangeCircle center={location} />
+          <RangeCircle center={defaultLocation} />
           {aircraftWithCoords.map((plane, index) => (
             <Marker
-              key={plane.hex || index}
+              key={plane.id || index}
               position={[plane.lat, plane.lon]}
-              icon={createAircraftIcon(plane.track || 0)}
+              icon={createAircraftIcon(plane.heading || 0)}
             />
           ))}
           <AircraftInfoOverlay
