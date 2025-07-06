@@ -5,7 +5,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { API_BASE_URL } from "../config/api";
 import { Loading } from "../components/Loading";
-import { Error } from "../components/Error";
 
 // Fix for default markers in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -51,7 +50,7 @@ const MapWrapper = styled.div`
     background: black;
 
     .leaflet-tile {
-      filter: grayscale(1) contrast(1.25);
+      filter: brightness(5) contrast(5) invert(1);
     }
 
     .leaflet-interactive {
@@ -154,14 +153,13 @@ const AircraftInfoOverlay = ({ aircraft, formatAltitude, formatSpeed }) => {
 const AircraftOverhead = ({ fccApiKey }) => {
   const [aircraft, setAircraft] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [, setLastUpdate] = useState(null);
   const [location, setLocation] = useState(null);
 
   const fetchAircraft = useCallback(async () => {
     try {
       if (!fccApiKey) {
-        throw new Error("Missing fccApiKey parameter");
+        console.error("Missing fccApiKey parameter");
+        return;
       }
 
       const response = await fetch(
@@ -169,7 +167,12 @@ const AircraftOverhead = ({ fccApiKey }) => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to fetch aircraft data");
+        console.error(
+          "Failed to fetch aircraft data:",
+          response.status,
+          response.statusText
+        );
+        return;
       }
 
       const data = await response.json();
@@ -177,10 +180,8 @@ const AircraftOverhead = ({ fccApiKey }) => {
       if (data.location) {
         setLocation([data.location.lat, data.location.lng]);
       }
-      setLastUpdate(new Date());
-      setError(null);
     } catch (err) {
-      setError(err.message);
+      console.error("Error fetching aircraft data:", err);
     } finally {
       setLoading(false);
     }
@@ -205,7 +206,7 @@ const AircraftOverhead = ({ fccApiKey }) => {
     return "Unknown";
   };
 
-  if (loading || !location) {
+  if (loading && !location) {
     return (
       <Container>
         <Loading />
@@ -213,10 +214,11 @@ const AircraftOverhead = ({ fccApiKey }) => {
     );
   }
 
-  if (error) {
+  // If we don't have location data yet, show loading
+  if (!location) {
     return (
       <Container>
-        <Error message={error} />
+        <Loading />
       </Container>
     );
   }
@@ -243,7 +245,10 @@ const AircraftOverhead = ({ fccApiKey }) => {
           style={{ height: "100%", width: "100%" }}
           attributionControl={false}
         >
-          <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png" />
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
+            opacity={0.15}
+          />
           {aircraftWithCoords.map((plane, index) => (
             <Marker
               key={plane.hex || index}
