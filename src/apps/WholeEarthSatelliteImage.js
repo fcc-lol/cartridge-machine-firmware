@@ -4,6 +4,19 @@ import { API_BASE_URL } from "../config/api";
 import { Loading } from "../components/Loading";
 import { Error } from "../components/Error";
 
+// Global image cache that persists across component unmounts/remounts
+const imageCache = new Map();
+const MAX_CACHE_SIZE = 50; // Limit cache to prevent memory issues
+
+// Function to manage cache size
+const manageCacheSize = () => {
+  if (imageCache.size > MAX_CACHE_SIZE) {
+    // Remove oldest entries (first 10 entries)
+    const entriesToRemove = Array.from(imageCache.keys()).slice(0, 10);
+    entriesToRemove.forEach((key) => imageCache.delete(key));
+  }
+};
+
 const EarthImageContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -69,8 +82,19 @@ function WholeEarthSatelliteImage({ fccApiKey }) {
 
     const loadPromises = imageList.map((img) => {
       return new Promise((resolve, reject) => {
+        // Check if image is already cached
+        if (imageCache.has(img.imageUrl)) {
+          loadedCount++;
+          setLoadingProgress({ loaded: loadedCount, total: imageList.length });
+          resolve();
+          return;
+        }
+
         const image = new Image();
         image.onload = () => {
+          // Cache the loaded image
+          imageCache.set(img.imageUrl, image);
+          manageCacheSize(); // Manage cache size after adding new image
           loadedCount++;
           setLoadingProgress({ loaded: loadedCount, total: imageList.length });
           resolve();
@@ -191,6 +215,13 @@ function WholeEarthSatelliteImage({ fccApiKey }) {
             src={currentImage.imageUrl}
             alt="Earth from space"
             loaded={imagesLoaded}
+            onLoad={(e) => {
+              // Ensure the image is cached if it wasn't already
+              if (!imageCache.has(currentImage.imageUrl)) {
+                imageCache.set(currentImage.imageUrl, e.target);
+                manageCacheSize(); // Manage cache size after adding new image
+              }
+            }}
           />
         )}
 
