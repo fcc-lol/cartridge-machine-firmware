@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Circle, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { API_BASE_URL } from "../config/api";
@@ -86,6 +86,28 @@ const InfoLine = styled.div`
     margin-bottom: 0.375rem;
   }
 `;
+
+// Custom component to render the 20nm radius circle
+const RangeCircle = ({ center }) => {
+  if (!center) return null;
+
+  // Convert 20 nautical miles to meters (1 nm = 1852 meters)
+  const radiusInMeters = 20 * 1852;
+
+  return (
+    <Circle
+      center={center}
+      radius={radiusInMeters}
+      pathOptions={{
+        color: "rgb(47, 255, 54)",
+        fillColor: "rgb(47, 255, 54)",
+        fillOpacity: 0.1,
+        weight: 2,
+        opacity: 0.6
+      }}
+    />
+  );
+};
 
 // Custom component to render airplane info boxes
 const AircraftInfoOverlay = ({ aircraft, formatAltitude, formatSpeed }) => {
@@ -249,6 +271,7 @@ const AircraftOverhead = ({ fccApiKey }) => {
             url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
             opacity={0.15}
           />
+          <RangeCircle center={location} />
           {aircraftWithCoords.map((plane, index) => (
             <Marker
               key={plane.hex || index}
