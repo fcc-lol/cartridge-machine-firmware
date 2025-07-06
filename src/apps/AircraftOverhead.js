@@ -68,9 +68,19 @@ const InfoBox = styled.div`
   font-family: monospace;
   text-transform: uppercase;
   text-shadow: 0 0.5rem 2rem rgba(47, 255, 54, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+`;
 
-  .flight-name {
+const InfoLine = styled.div`
+  margin-bottom: 0.25rem;
+
+  &:first-child {
     font-weight: bold;
+    font-size: 0.875rem;
+    margin-bottom: 0.375rem;
   }
 `;
 
@@ -121,22 +131,15 @@ const AircraftInfoOverlay = ({ aircraft, formatAltitude, formatSpeed }) => {
             key={key}
             style={{
               left: position.x + 20,
-              top: position.y + 15,
-              transform: "translate(0, -50%)"
+              top: position.y - 7
             }}
           >
-            <div className="flight-name">
-              {plane.flight
-                ? plane.flight.trim()
-                : plane.r || `Aircraft ${index + 1}`}{" "}
-            </div>
-            {plane.t && <div className="info-line">{plane.t}</div>}
+            {plane.flight && <InfoLine>{plane.flight.trim()}</InfoLine>}
+            {plane.t && <InfoLine>{plane.t}</InfoLine>}
             {plane.alt_baro && (
-              <div className="info-line">{formatAltitude(plane.alt_baro)}</div>
+              <InfoLine>{formatAltitude(plane.alt_baro)}</InfoLine>
             )}
-            {plane.gs && (
-              <div className="info-line">{formatSpeed(plane.gs)}</div>
-            )}
+            {plane.gs && <InfoLine>{formatSpeed(plane.gs)}</InfoLine>}
           </InfoBox>
         );
       })}
@@ -187,7 +190,10 @@ const AircraftOverhead = ({ fccApiKey }) => {
 
   const formatAltitude = (altitude) => {
     if (altitude === "ground") return "Ground";
-    if (typeof altitude === "number") return `${altitude.toLocaleString()} ft`;
+    if (typeof altitude === "number") {
+      if (altitude < 0) return null;
+      return `${altitude.toLocaleString()} ft`;
+    }
     return "Unknown";
   };
 
@@ -214,7 +220,11 @@ const AircraftOverhead = ({ fccApiKey }) => {
 
   // Get aircraft with coordinates for map markers, excluding ground aircraft
   const aircraftWithCoords = aircraft.filter(
-    (plane) => plane.lat && plane.lon && plane.alt_baro !== "ground"
+    (plane) =>
+      plane.lat &&
+      plane.lon &&
+      plane.alt_baro !== "ground" &&
+      plane.alt_baro > 0
   );
 
   return (
