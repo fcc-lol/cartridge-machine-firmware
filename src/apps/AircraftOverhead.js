@@ -189,7 +189,6 @@ const AircraftOverhead = ({ fccApiKey }) => {
   }, [fetchAircraft]);
 
   const formatAltitude = (altitude) => {
-    if (altitude === "ground") return "Ground";
     if (typeof altitude === "number") {
       if (altitude < 0) return null;
       return `${altitude.toLocaleString()} ft`;
