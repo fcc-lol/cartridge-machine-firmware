@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CARTRIDGES from "./config/cartridges.json";
+import { Instructions } from "./components/Instructions";
 
 // Dynamically import all apps from the Apps directory
 const importAll = (r) => {
@@ -38,19 +39,6 @@ const AppContainer = styled.div`
   left: 0;
   border-radius: 0;
   background: black;
-`;
-
-const Instructions = styled.div`
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-  margin-top: -1rem;
 `;
 
 function App() {
@@ -150,20 +138,36 @@ function App() {
   // Render the active app
   if (activeApp) {
     let AppComponent = null;
+    let appName = "";
 
     // Check if it's a URL parameter app
     if (activeApp.startsWith("url_")) {
-      const appName = activeApp.replace("url_", "");
+      appName = activeApp.replace("url_", "");
       AppComponent = APPS[appName];
     } else {
       // Check if it's a cartridge ID app
       AppComponent = CARTRIDGE_TO_APP_MAPPING[activeApp];
+      // Find the app name from the cartridge mapping
+      appName = Object.keys(APPS).find((key) => APPS[key] === AppComponent);
     }
 
     if (AppComponent) {
+      // Get fccApiKey from URL for apps that need it
+      const fccApiKey = getUrlParam("fccApiKey");
+
+      // List of apps that need the fccApiKey
+      const appsNeedingApiKey = [
+        "AircraftOverhead",
+        "WholeEarthSatelliteImage"
+      ];
+
       return (
         <AppContainer>
-          <AppComponent />
+          {appsNeedingApiKey.includes(appName) ? (
+            <AppComponent fccApiKey={fccApiKey} />
+          ) : (
+            <AppComponent />
+          )}
         </AppContainer>
       );
     }

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
+import { Loading } from "../components/Loading";
+import { Error } from "../components/Error";
 
 const WeatherContainer = styled.div`
   width: 100vw;
@@ -39,24 +41,6 @@ const RefreshInfo = styled.div`
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
   backdrop-filter: blur(10px);
-`;
-
-const ErrorMessage = styled.div`
-  color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.1);
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  text-align: center;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  z-index: 1;
-`;
-
-const LoadingMessage = styled.div`
-  color: white;
-  font-size: 1.5rem;
-  font-family: "Courier New", Courier, monospace;
 `;
 
 function USWeatherMap() {
@@ -126,10 +110,10 @@ function USWeatherMap() {
 
   return (
     <WeatherContainer>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {error && <Error message={error} />}
 
       {loading ? (
-        <LoadingMessage>Refreshing weather data...</LoadingMessage>
+        <Loading />
       ) : imageUrl ? (
         <WeatherImage
           src={imageUrl}
@@ -137,7 +121,7 @@ function USWeatherMap() {
           onError={() => setError("Failed to load weather image")}
         />
       ) : (
-        <LoadingMessage>Loading weather data...</LoadingMessage>
+        <Loading />
       )}
 
       <InfoPanel>

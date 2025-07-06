@@ -103,5 +103,10 @@
     "color": "BLUE",
     "type": "STANDARD",
     "app": "InfiniteColorFade"
+  },
+  "0011122334": {
+    "color": "PURPLE",
+    "type": "STANDARD",
+    "app": "AircraftOverhead"
   }
 }
