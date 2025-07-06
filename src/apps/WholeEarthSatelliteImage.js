@@ -199,13 +199,7 @@ function WholeEarthSatelliteImage({ fccApiKey }) {
 
   return (
     <>
-      {loading && loadingProgress.total > 0 && (
-        <Loading
-          message={`Loading ${Math.round(
-            (loadingProgress.loaded / loadingProgress.total) * 100
-          )}%`}
-        />
-      )}
+      {loading && loadingProgress.total > 0 && <Loading />}
 
       <EarthImageContainer>
         {error && <Error message={error} />}
