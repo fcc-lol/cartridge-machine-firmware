@@ -18,9 +18,9 @@ const APPS = importAll(require.context("./apps", false, /\.js$/));
 // Build the cartridge-to-app mapping using the config and imported apps
 const CARTRIDGE_TO_APP_MAPPING = Object.keys(CARTRIDGES).reduce(
   (acc, cartridgeId) => {
-    const appName = CARTRIDGES[cartridgeId].app;
-    if (APPS[appName]) {
-      acc[cartridgeId] = APPS[appName];
+    const cartridge = CARTRIDGES[cartridgeId];
+    if (cartridge.action === "open_app" && APPS[cartridge.app]) {
+      acc[cartridgeId] = APPS[cartridge.app];
     }
     return acc;
   },
@@ -99,20 +99,28 @@ function App() {
         const newInput = currentInput + event.key;
         setCurrentInput(newInput);
 
-        // Check if the input matches any app ID
-        if (CARTRIDGE_TO_APP_MAPPING[newInput]) {
-          setActiveApp(newInput);
-          setCurrentInput(""); // Clear input after successful match
+        // Check if the input matches any cartridge ID
+        if (CARTRIDGES[newInput]) {
+          const cartridge = CARTRIDGES[newInput];
 
-          // Update URL to reflect the app (find the corresponding URL param)
-          const appComponent = CARTRIDGE_TO_APP_MAPPING[newInput];
-          const urlParam = Object.keys(APPS).find(
-            (key) => APPS[key] === appComponent
-          );
-          if (urlParam) {
-            const newUrl = new URL(window.location);
-            newUrl.searchParams.set("app", urlParam);
-            window.history.pushState({}, "", newUrl);
+          // Handle different action types
+          if (cartridge.action === "refresh") {
+            window.location.reload();
+            return;
+          } else if (cartridge.action === "open_app") {
+            setActiveApp(newInput);
+            setCurrentInput(""); // Clear input after successful match
+
+            // Update URL to reflect the app (find the corresponding URL param)
+            const appComponent = CARTRIDGE_TO_APP_MAPPING[newInput];
+            const urlParam = Object.keys(APPS).find(
+              (key) => APPS[key] === appComponent
+            );
+            if (urlParam) {
+              const newUrl = new URL(window.location);
+              newUrl.searchParams.set("app", urlParam);
+              window.history.pushState({}, "", newUrl);
+            }
           }
         }
       }

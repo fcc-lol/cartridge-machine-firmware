@@ -2,106 +2,126 @@
   "0010177791": {
     "color": "RED",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0008521758": {
     "color": "RED",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0009193929": {
     "color": "RED",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0008522724": {
     "color": "RED",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0008477112": {
     "color": "RED",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0008721413": {
     "color": "RED",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0010391937": {
     "color": "RED",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0010365893": {
     "color": "RED",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0010432823": {
     "color": "GREEN",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "WholeEarthSatelliteImage"
   },
   "0026319016": {
     "color": "GREEN",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "WholeEarthSatelliteImage"
   },
   "0010451634": {
     "color": "GREEN",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "WholeEarthSatelliteImage"
   },
   "0010306975": {
     "color": "GREEN",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "WholeEarthSatelliteImage"
   },
   "0008708792": {
     "color": "ORANGE",
     "type": "STANDARD",
-    "app": "USWeatherMap"
+    "action": "refresh"
   },
   "0010388313": {
     "color": "ORANGE",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "USWeatherMap"
   },
   "0008440795": {
     "color": "ORANGE",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "USWeatherMap"
   },
   "0008858985": {
     "color": "ORANGE",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "USWeatherMap"
   },
   "0009684980": {
     "color": "ORANGE",
     "type": "DEMO",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0008528012": {
     "color": "BLUE",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0008860981": {
     "color": "BLUE",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0008502093": {
     "color": "BLUE",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "InfiniteColorFade"
   },
   "0010184850": {
     "color": "BLUE",
     "type": "STANDARD",
+    "action": "open_app",
     "app": "AircraftOverhead"
   }
 }
