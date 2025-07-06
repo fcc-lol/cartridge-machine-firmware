@@ -53,6 +53,10 @@ const MapWrapper = styled.div`
     .leaflet-tile {
       filter: grayscale(1) contrast(1.25);
     }
+
+    .leaflet-interactive {
+      cursor: default;
+    }
   }
 `;
 
