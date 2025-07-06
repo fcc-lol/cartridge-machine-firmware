@@ -110,17 +110,6 @@ function App() {
           } else if (cartridge.action === "open_app") {
             setActiveApp(newInput);
             setCurrentInput(""); // Clear input after successful match
-
-            // Update URL to reflect the app (find the corresponding URL param)
-            const appComponent = CARTRIDGE_TO_APP_MAPPING[newInput];
-            const urlParam = Object.keys(APPS).find(
-              (key) => APPS[key] === appComponent
-            );
-            if (urlParam) {
-              const newUrl = new URL(window.location);
-              newUrl.searchParams.set("app", urlParam);
-              window.history.pushState({}, "", newUrl);
-            }
           }
         }
       }
