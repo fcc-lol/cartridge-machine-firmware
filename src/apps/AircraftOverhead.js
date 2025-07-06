@@ -50,7 +50,7 @@ const MapWrapper = styled.div`
     background: black;
 
     .leaflet-tile {
-      filter: brightness(5) contrast(5) invert(1);
+      filter: brightness(5) contrast(10) invert(1);
     }
 
     .leaflet-interactive {
@@ -103,7 +103,7 @@ const RangeCircle = ({ center }) => {
         fillColor: "rgb(47, 255, 54)",
         fillOpacity: 0.1,
         weight: 2,
-        opacity: 0.6
+        opacity: 0.5
       }}
     />
   );
@@ -276,7 +276,7 @@ const AircraftOverhead = ({ fccApiKey }) => {
         >
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-            opacity={0.15}
+            opacity={0.1}
           />
           <RangeCircle center={defaultLocation} />
           {aircraftWithCoords.map((plane, index) => (
