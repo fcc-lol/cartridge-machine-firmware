@@ -89,17 +89,16 @@ const InfoLine = styled.div`
 
 // Custom component to render the radius circle
 const RangeCircle = ({ center, radius }) => {
-  if (
-    !center ||
-    !radius ||
-    typeof radius !== "number" ||
-    isNaN(radius) ||
-    radius <= 0
-  )
-    return null;
+  if (!center || radius == null) return null;
+
+  // Convert radius to number if it's a string
+  const radiusNum = typeof radius === "string" ? parseFloat(radius) : radius;
+
+  // Validate that we have a valid positive number
+  if (isNaN(radiusNum) || radiusNum <= 0) return null;
 
   // Convert nautical miles to meters (1 nm = 1852 meters)
-  const radiusInMeters = radius * 1852;
+  const radiusInMeters = radiusNum * 1852;
 
   return (
     <Circle
@@ -229,9 +228,16 @@ const AircraftOverhead = ({ fccApiKey }) => {
       if (data.metadata && data.metadata.location) {
         setLocation([data.metadata.location.lat, data.metadata.location.lng]);
       }
-      if (data.metadata && data.metadata.radius) {
-        setRadius(data.metadata.radius);
+      if (data.metadata && data.metadata.radius && data.metadata.radius.value) {
+        console.log(
+          "API radius value:",
+          data.metadata.radius.value,
+          "Unit:",
+          data.metadata.radius.unit
+        );
+        setRadius(data.metadata.radius.value);
       }
+      console.log("Full API metadata:", data.metadata);
     } catch (err) {
       console.error("Error fetching aircraft data:", err);
     } finally {
