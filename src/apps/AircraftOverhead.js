@@ -89,7 +89,7 @@ const InfoLine = styled.div`
 
 // Custom component to render the radius circle
 const RangeCircle = ({ center, radius }) => {
-  if (!center) return null;
+  if (!center || !radius) return null;
 
   // Convert nautical miles to meters (1 nm = 1852 meters)
   const radiusInMeters = radius * 1852;
@@ -195,7 +195,7 @@ const AircraftOverhead = ({ fccApiKey }) => {
   const [aircraft, setAircraft] = useState([]);
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState(null);
-  const [radius, setRadius] = useState(20); // Default to 20nm if not provided by API
+  const [radius, setRadius] = useState(null); // No default value - only show circle when API provides radius
 
   const fetchAircraft = useCallback(async () => {
     try {
