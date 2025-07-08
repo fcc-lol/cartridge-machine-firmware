@@ -89,7 +89,14 @@ const InfoLine = styled.div`
 
 // Custom component to render the radius circle
 const RangeCircle = ({ center, radius }) => {
-  if (!center || !radius) return null;
+  if (
+    !center ||
+    !radius ||
+    typeof radius !== "number" ||
+    isNaN(radius) ||
+    radius <= 0
+  )
+    return null;
 
   // Convert nautical miles to meters (1 nm = 1852 meters)
   const radiusInMeters = radius * 1852;
