@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CARTRIDGES from "./config/cartridges.json";
 import { Instructions } from "./components/Instructions";
+import { preloadSatelliteImages } from "./services/imagePreloader";
 
 // Dynamically import all apps from the Apps directory
 const importAll = (r) => {
@@ -78,6 +79,15 @@ function App() {
     return () => {
       window.removeEventListener("popstate", handleUrlChange);
     };
+  }, []);
+
+  // Preload satellite images when app starts
+  useEffect(() => {
+    const fccApiKey = getUrlParam("fccApiKey");
+    if (fccApiKey) {
+      // Start preloading in the background
+      preloadSatelliteImages(fccApiKey);
+    }
   }, []);
 
   // Handle keyboard input

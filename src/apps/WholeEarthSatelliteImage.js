@@ -3,14 +3,12 @@ import styled from "styled-components";
 import { API_BASE_URL } from "../config/api";
 import { Loading } from "../components/Loading";
 import { Error } from "../components/Error";
-
-// Global image cache that persists across component unmounts/remounts
-const imageCache = new Map();
-const MAX_CACHE_SIZE = 50; // Limit cache to prevent memory issues
+import { imageCache } from "../services/imagePreloader";
 
 // Function to manage cache size
 const manageCacheSize = () => {
-  if (imageCache.size > MAX_CACHE_SIZE) {
+  if (imageCache.size > 50) {
+    // MAX_CACHE_SIZE = 50
     // Remove oldest entries (first 10 entries)
     const entriesToRemove = Array.from(imageCache.keys()).slice(0, 10);
     entriesToRemove.forEach((key) => imageCache.delete(key));
