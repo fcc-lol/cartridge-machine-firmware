@@ -18,18 +18,15 @@ const preloadSingleImage = (imageUrl) => {
   return new Promise((resolve, reject) => {
     // Check if image is already cached
     if (imageCache.has(imageUrl)) {
-      console.log(`Image already cached: ${imageUrl.split("/").pop()}`);
       resolve();
       return;
     }
 
-    console.log(`Loading image: ${imageUrl.split("/").pop()}`);
     const image = new Image();
     image.onload = () => {
       // Cache the loaded image
       imageCache.set(imageUrl, image);
       manageCacheSize(); // Manage cache size after adding new image
-      console.log(`✓ Loaded image: ${imageUrl.split("/").pop()}`);
       resolve();
     };
     image.onerror = () => {
@@ -43,13 +40,11 @@ const preloadSingleImage = (imageUrl) => {
 // Main function to preload satellite images
 export const preloadSatelliteImages = async (fccApiKey) => {
   if (!fccApiKey) {
-    console.log("No FCC API key provided, skipping satellite image preload");
+    console.error("No FCC API key provided, skipping satellite image preload");
     return;
   }
 
   try {
-    console.log("Starting satellite image preload...");
-
     // Fetch the list of available images
     const response = await fetch(
       `${API_BASE_URL}/WholeEarthSatelliteImage?fccApiKey=${fccApiKey}`
@@ -62,7 +57,6 @@ export const preloadSatelliteImages = async (fccApiKey) => {
     const data = await response.json();
 
     if (data.length === 0) {
-      console.log("No satellite images available for preloading");
       return;
     }
 
@@ -71,8 +65,6 @@ export const preloadSatelliteImages = async (fccApiKey) => {
       id: imageId,
       imageUrl: `${API_BASE_URL}/WholeEarthSatelliteImage/image/${imageId}.png?fccApiKey=${fccApiKey}`
     }));
-
-    console.log(`Preloading ${imagesToPreload.length} satellite images...`);
 
     // Preload images in parallel with a concurrency limit
     const concurrencyLimit = 3; // Load 3 images at a time
@@ -85,10 +77,6 @@ export const preloadSatelliteImages = async (fccApiKey) => {
     for (const chunk of chunks) {
       await Promise.all(chunk.map((img) => preloadSingleImage(img.imageUrl)));
     }
-
-    console.log(
-      `Successfully preloaded ${imagesToPreload.length} satellite images`
-    );
   } catch (error) {
     console.error("Error preloading satellite images:", error);
   }

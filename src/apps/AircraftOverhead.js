@@ -229,15 +229,8 @@ const AircraftOverhead = ({ fccApiKey }) => {
         setLocation([data.metadata.location.lat, data.metadata.location.lng]);
       }
       if (data.metadata && data.metadata.radius && data.metadata.radius.value) {
-        console.log(
-          "API radius value:",
-          data.metadata.radius.value,
-          "Unit:",
-          data.metadata.radius.unit
-        );
         setRadius(data.metadata.radius.value);
       }
-      console.log("Full API metadata:", data.metadata);
     } catch (err) {
       console.error("Error fetching aircraft data:", err);
     } finally {
