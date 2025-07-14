@@ -102,11 +102,17 @@ function App() {
 
       setLastKeyTime(now);
 
-      // Only handle number keys
-      if (event.key >= "0" && event.key <= "9") {
+      // Handle number keys and letters
+      if (
+        (event.key >= "0" && event.key <= "9") ||
+        (event.key >= "A" && event.key <= "Z") ||
+        (event.key >= "a" && event.key <= "z")
+      ) {
         event.preventDefault();
 
-        const newInput = currentInput + event.key;
+        // Convert to uppercase for consistency
+        const key = event.key.toUpperCase();
+        const newInput = currentInput + key;
         setCurrentInput(newInput);
 
         // Check if the input matches any cartridge ID
