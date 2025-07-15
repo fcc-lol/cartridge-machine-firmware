@@ -53,15 +53,18 @@ function App() {
     return urlParams.get(param);
   };
 
-  // Check for URL parameters on component mount and handle URL changes
+  // Check for URL parameters and hash on component mount and handle URL changes
   useEffect(() => {
     const handleUrlChange = () => {
       const appParam = getUrlParam("app");
+      const hashApp = window.location.hash.replace("#", "");
 
       if (appParam && APPS[appParam]) {
         setActiveApp(`url_${appParam}`);
+      } else if (hashApp && APPS[hashApp]) {
+        setActiveApp(`url_${hashApp}`);
       } else {
-        // If no valid app param, reset to default state
+        // If no valid app param or hash, reset to default state
         setActiveApp(null);
       }
     };
@@ -72,12 +75,16 @@ function App() {
     // Listen for browser back/forward navigation
     window.addEventListener("popstate", handleUrlChange);
 
+    // Listen for hash changes
+    window.addEventListener("hashchange", handleUrlChange);
+
     // Ensure the window has focus for immediate keyboard input
     window.focus();
 
-    // Cleanup listener
+    // Cleanup listeners
     return () => {
       window.removeEventListener("popstate", handleUrlChange);
+      window.removeEventListener("hashchange", handleUrlChange);
     };
   }, []);
 
