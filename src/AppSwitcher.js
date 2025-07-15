@@ -109,16 +109,11 @@ function App() {
 
       setLastKeyTime(now);
 
-      // Handle number keys and letters
-      if (
-        (event.key >= "0" && event.key <= "9") ||
-        (event.key >= "A" && event.key <= "Z") ||
-        (event.key >= "a" && event.key <= "z")
-      ) {
+      // Handle number keys only
+      if (event.key >= "0" && event.key <= "9") {
         event.preventDefault();
 
-        // Convert to uppercase for consistency
-        const key = event.key.toUpperCase();
+        const key = event.key;
         const newInput = currentInput + key;
         setCurrentInput(newInput);
 

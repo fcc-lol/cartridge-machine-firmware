@@ -1,24 +1,4 @@
 {
-  "SIM1": {
-    "type": "SIMULATOR",
-    "action": "open_app",
-    "app": "WholeEarthSatelliteImage"
-  },
-  "SIM2": {
-    "type": "SIMULATOR",
-    "action": "open_app",
-    "app": "InfiniteColorFade"
-  },
-  "SIM3": {
-    "type": "SIMULATOR",
-    "action": "open_app",
-    "app": "AircraftOverhead"
-  },
-  "SIM4": {
-    "type": "SIMULATOR",
-    "action": "open_app",
-    "app": "USWeatherMap"
-  },
   "0010177791": {
     "color": "RED",
     "type": "STANDARD",
