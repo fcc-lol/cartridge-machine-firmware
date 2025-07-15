@@ -89,6 +89,7 @@ function WholeEarthSatelliteImage({ fccApiKey }) {
         }
 
         const image = new Image();
+        image.crossOrigin = "anonymous"; // Enable CORS for potential future canvas use
         image.onload = () => {
           // Cache the loaded image
           imageCache.set(img.imageUrl, image);
@@ -112,6 +113,57 @@ function WholeEarthSatelliteImage({ fccApiKey }) {
   }, []);
 
   const fetchEarthImages = useCallback(async () => {
+    // First check if we already have cached images for this API key
+    const cachedEntries = Array.from(imageCache.keys());
+    const relevantCache = cachedEntries.filter((url) =>
+      url.includes(`fccApiKey=${FCC_API_KEY}`)
+    );
+
+    if (relevantCache.length > 0) {
+      // Extract image IDs from cached URLs and reconstruct image objects
+      const cachedImages = relevantCache
+        .map((url) => {
+          const imageIdMatch = url.match(/\/image\/([^.]+)\.png/);
+          if (imageIdMatch) {
+            const imageId = imageIdMatch[1];
+
+            // Parse date from the image identifier
+            const dateMatch = imageId.match(/(\d{8})(\d{6})$/);
+            let date = new Date();
+
+            if (dateMatch) {
+              const [, dateStr, timeStr] = dateMatch;
+              const year = parseInt(dateStr.substring(0, 4));
+              const month = parseInt(dateStr.substring(4, 6)) - 1;
+              const day = parseInt(dateStr.substring(6, 8));
+              const hour = parseInt(timeStr.substring(0, 2));
+              const minute = parseInt(timeStr.substring(2, 4));
+              const second = parseInt(timeStr.substring(4, 6));
+
+              date = new Date(year, month, day, hour, minute, second);
+            }
+
+            return {
+              id: imageId,
+              date: date.toISOString(),
+              imageUrl: url
+            };
+          }
+          return null;
+        })
+        .filter(Boolean);
+
+      if (cachedImages.length > 0) {
+        // Use cached images, skip loading
+
+        setImages(cachedImages);
+        setCurrentImageIndex(0);
+        setImagesLoaded(true);
+        setLoading(false);
+        return;
+      }
+    }
+
     setLoading(true);
     setError(null);
     setImagesLoaded(false);

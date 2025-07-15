@@ -23,6 +23,7 @@ const preloadSingleImage = (imageUrl) => {
     }
 
     const image = new Image();
+    image.crossOrigin = "anonymous"; // Enable CORS for potential future canvas use
     image.onload = () => {
       // Cache the loaded image
       imageCache.set(imageUrl, image);
