@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CARTRIDGES from "./config/cartridges.json";
 import { Instructions } from "./components/Instructions";
-import { preloadSatelliteImages } from "./services/imagePreloader";
+import {
+  preloadSatelliteImages,
+  setProgressCallback
+} from "./services/imagePreloader";
 
 // Dynamically import all apps from the Apps directory
 const importAll = (r) => {
@@ -42,10 +45,65 @@ const AppContainer = styled.div`
   background: black;
 `;
 
+const DebugSection = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  font-family: monospace;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  border: 2px solid #333;
+  overflow-y: auto;
+`;
+
+const DebugLine = styled.div`
+  margin: 0.25rem 0;
+  color: #fff;
+`;
+
+const DebugTitle = styled.div`
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+`;
+
+const LoadingList = styled.div`
+  color: #ffa500;
+  margin: 0.5rem 0;
+`;
+
+const SuccessList = styled.div`
+  color: #90ee90;
+  margin: 0.5rem 0;
+`;
+
+const ErrorList = styled.div`
+  color: #ff6b6b;
+  margin: 0.5rem 0;
+`;
+
+const MainContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+`;
+
 function App() {
   const [currentInput, setCurrentInput] = useState("");
   const [activeApp, setActiveApp] = useState(null);
   const [lastKeyTime, setLastKeyTime] = useState(0);
+  const [imageLoadingProgress, setImageLoadingProgress] = useState({
+    loaded: 0,
+    total: 0,
+    isLoading: false,
+    events: []
+  });
 
   // Function to get URL parameters
   const getUrlParam = (param) => {
@@ -88,8 +146,13 @@ function App() {
     };
   }, []);
 
-  // Preload satellite images when app starts
+  // Set up progress callback and preload satellite images when app starts
   useEffect(() => {
+    // Set up progress callback
+    setProgressCallback((progress) => {
+      setImageLoadingProgress(progress);
+    });
+
     const fccApiKey = getUrlParam("fccApiKey");
     if (fccApiKey) {
       // Start preloading in the background
@@ -192,7 +255,35 @@ function App() {
   // Render the app selector
   return (
     <AppContainer>
-      <Instructions>Insert a cartridge</Instructions>
+      <MainContent>
+        <Instructions>Insert a cartridge</Instructions>
+      </MainContent>
+      <DebugSection>
+        <DebugTitle>Image Preloader Debug</DebugTitle>
+
+        <DebugLine>
+          Progress: {imageLoadingProgress.loaded} / {imageLoadingProgress.total}{" "}
+          loaded
+          {imageLoadingProgress.isLoading && " (loading...)"}
+          {!imageLoadingProgress.isLoading &&
+            imageLoadingProgress.total > 0 &&
+            " (complete)"}
+        </DebugLine>
+
+        {(imageLoadingProgress.events || []).map((event, index) => (
+          <DebugLine key={index}>
+            {event.status === "loading" && (
+              <LoadingList>🔄 Loading {event.message}</LoadingList>
+            )}
+            {event.status === "success" && (
+              <SuccessList>✅ Loaded {event.message}</SuccessList>
+            )}
+            {event.status === "error" && (
+              <ErrorList>❌ Failed to load {event.message}</ErrorList>
+            )}
+          </DebugLine>
+        ))}
+      </DebugSection>
     </AppContainer>
   );
 }

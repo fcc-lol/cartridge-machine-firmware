@@ -4,6 +4,30 @@ import { API_BASE_URL } from "../config/api";
 const imageCache = new Map();
 const MAX_CACHE_SIZE = 50; // Limit cache to prevent memory issues
 
+// Global progress tracking with detailed information
+let loadingProgress = {
+  loaded: 0,
+  total: 0,
+  isLoading: false,
+  events: [] // Array of loading events with status
+};
+
+// Callback function for progress updates
+let progressCallback = null;
+
+// Function to set progress callback
+export const setProgressCallback = (callback) => {
+  progressCallback = callback;
+};
+
+// Function to update progress
+const updateProgress = (updates) => {
+  loadingProgress = { ...loadingProgress, ...updates };
+  if (progressCallback) {
+    progressCallback(loadingProgress);
+  }
+};
+
 // Function to manage cache size
 const manageCacheSize = () => {
   if (imageCache.size > MAX_CACHE_SIZE) {
@@ -13,27 +37,56 @@ const manageCacheSize = () => {
   }
 };
 
-// Function to preload a single image
-const preloadSingleImage = (imageUrl) => {
+// Function to preload a single image with timeout
+const preloadSingleImage = (imageUrl, onSuccess, onError, onStartLoading) => {
   return new Promise((resolve, reject) => {
+    const imageName = imageUrl.split("/").pop();
+
     // Check if image is already cached
     if (imageCache.has(imageUrl)) {
+      if (onSuccess) onSuccess(imageUrl, imageName, "cached");
       resolve();
       return;
     }
 
+    // Notify that loading is starting
+    if (onStartLoading) onStartLoading(imageUrl, imageName);
+
     const image = new Image();
-    image.crossOrigin = "anonymous"; // Enable CORS for potential future canvas use
-    image.onload = () => {
+
+    // Set up timeout (20 seconds)
+    const timeout = setTimeout(() => {
+      if (onError) onError(imageUrl, imageName, "timeout");
+      reject(new Error(`Timeout loading image: ${imageUrl}`));
+    }, 20000);
+
+    // Prevent double resolution/counting
+    let hasResolved = false;
+
+    const handleSuccess = () => {
+      if (hasResolved) return;
+      hasResolved = true;
+
+      if (timeout) clearTimeout(timeout);
       // Cache the loaded image
       imageCache.set(imageUrl, image);
       manageCacheSize(); // Manage cache size after adding new image
+      if (onSuccess) onSuccess(imageUrl, imageName, "loaded");
       resolve();
     };
-    image.onerror = () => {
-      console.error(`✗ Failed to load image: ${imageUrl.split("/").pop()}`);
-      reject(new Error(`Failed to load image: ${imageUrl}`));
+
+    const handleError = (errorType) => {
+      if (hasResolved) return;
+      hasResolved = true;
+
+      if (timeout) clearTimeout(timeout);
+      if (onError) onError(imageUrl, imageName, errorType);
+      reject(new Error(`${errorType} loading image: ${imageUrl}`));
     };
+
+    image.onload = handleSuccess;
+    image.onerror = () => handleError("Failed to load image");
+
     image.src = imageUrl;
   });
 };
@@ -41,7 +94,12 @@ const preloadSingleImage = (imageUrl) => {
 // Main function to preload satellite images
 export const preloadSatelliteImages = async (fccApiKey) => {
   if (!fccApiKey) {
-    console.error("No FCC API key provided, skipping satellite image preload");
+    updateProgress({
+      loaded: 0,
+      total: 0,
+      isLoading: false,
+      events: [{ status: "error", message: "No API key provided" }]
+    });
     return;
   }
 
@@ -58,6 +116,12 @@ export const preloadSatelliteImages = async (fccApiKey) => {
     const data = await response.json();
 
     if (data.length === 0) {
+      updateProgress({
+        loaded: 0,
+        total: 0,
+        isLoading: false,
+        events: [{ status: "error", message: "No images available" }]
+      });
       return;
     }
 
@@ -67,21 +131,86 @@ export const preloadSatelliteImages = async (fccApiKey) => {
       imageUrl: `${API_BASE_URL}/WholeEarthSatelliteImage/image/${imageId}.png?fccApiKey=${fccApiKey}`
     }));
 
-    // Preload images in parallel with a concurrency limit
-    const concurrencyLimit = 3; // Load 3 images at a time
-    const chunks = [];
+    // Initialize progress tracking
+    let loadedCount = 0;
+    const totalCount = imagesToPreload.length;
+    const countedImages = new Set();
 
-    for (let i = 0; i < imagesToPreload.length; i += concurrencyLimit) {
-      chunks.push(imagesToPreload.slice(i, i + concurrencyLimit));
+    updateProgress({
+      loaded: 0,
+      total: totalCount,
+      isLoading: true,
+      events: []
+    });
+
+    // Callbacks for image loading events
+    const onImageSuccess = (imageUrl, imageName, status) => {
+      if (!countedImages.has(imageUrl)) {
+        countedImages.add(imageUrl);
+        loadedCount++;
+
+        updateProgress({
+          loaded: loadedCount,
+          events: [
+            ...loadingProgress.events,
+            {
+              status: "success",
+              message: `${imageName.split("?")[0]} (${status})`
+            }
+          ]
+        });
+      }
+    };
+
+    const onImageError = (imageUrl, imageName, errorType) => {
+      updateProgress({
+        events: [
+          ...loadingProgress.events,
+          {
+            status: "error",
+            message: `${imageName.split("?")[0]} (${errorType})`
+          }
+        ]
+      });
+    };
+
+    const onStartLoading = (imageUrl, imageName) => {
+      updateProgress({
+        events: [
+          ...loadingProgress.events,
+          { status: "loading", message: imageName.split("?")[0] }
+        ]
+      });
+    };
+
+    // Load images in series - one at a time for better server behavior
+    for (let i = 0; i < imagesToPreload.length; i++) {
+      const img = imagesToPreload[i];
+      try {
+        await preloadSingleImage(
+          img.imageUrl,
+          onImageSuccess,
+          onImageError,
+          onStartLoading
+        );
+      } catch (error) {
+        // Individual image errors are already handled by onImageError callback
+        // Continue loading the next image
+      }
     }
 
-    for (const chunk of chunks) {
-      await Promise.all(chunk.map((img) => preloadSingleImage(img.imageUrl)));
-    }
+    updateProgress({
+      isLoading: false
+    });
   } catch (error) {
-    console.error("Error preloading satellite images:", error);
+    updateProgress({
+      loaded: 0,
+      total: 0,
+      isLoading: false,
+      events: [{ status: "error", message: "Error: " + error.message }]
+    });
   }
 };
 
-// Export the cache for use in components
-export { imageCache };
+// Export the cache and progress tracking for use in components
+export { imageCache, loadingProgress };
