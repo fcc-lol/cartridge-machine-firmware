@@ -229,15 +229,11 @@ function WholeEarthSatelliteImage({ fccApiKey }) {
     if (images.length > 1 && imagesLoaded) {
       let interval;
 
-      // Start with a delay to ensure the first image is shown for the full duration
-      const timeout = setTimeout(() => {
-        interval = setInterval(() => {
-          setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-        }, 2000); // 2 seconds
-      }, 2000); // Wait 2 seconds before starting the cycle
+      interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, 2000);
 
       return () => {
-        clearTimeout(timeout);
         if (interval) {
           clearInterval(interval);
         }
