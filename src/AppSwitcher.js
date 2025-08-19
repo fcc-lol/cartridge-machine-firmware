@@ -105,6 +105,9 @@ function App() {
     events: []
   });
 
+  // Hardcoded variable to control DebugSection visibility
+  const SHOW_DEBUG_SECTION = false;
+
   // Function to get URL parameters
   const getUrlParam = (param) => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -258,32 +261,34 @@ function App() {
       <MainContent>
         <Instructions>Insert a cartridge</Instructions>
       </MainContent>
-      <DebugSection>
-        <DebugTitle>Image Preloader Debug</DebugTitle>
+      {SHOW_DEBUG_SECTION && (
+        <DebugSection>
+          <DebugTitle>Image Preloader Debug</DebugTitle>
 
-        <DebugLine>
-          Progress: {imageLoadingProgress.loaded} / {imageLoadingProgress.total}{" "}
-          loaded
-          {imageLoadingProgress.isLoading && " (loading...)"}
-          {!imageLoadingProgress.isLoading &&
-            imageLoadingProgress.total > 0 &&
-            " (complete)"}
-        </DebugLine>
-
-        {(imageLoadingProgress.events || []).map((event, index) => (
-          <DebugLine key={index}>
-            {event.status === "loading" && (
-              <LoadingList>🔄 Loading {event.message}</LoadingList>
-            )}
-            {event.status === "success" && (
-              <SuccessList>✅ Loaded {event.message}</SuccessList>
-            )}
-            {event.status === "error" && (
-              <ErrorList>❌ Failed to load {event.message}</ErrorList>
-            )}
+          <DebugLine>
+            Progress: {imageLoadingProgress.loaded} /{" "}
+            {imageLoadingProgress.total} loaded
+            {imageLoadingProgress.isLoading && " (loading...)"}
+            {!imageLoadingProgress.isLoading &&
+              imageLoadingProgress.total > 0 &&
+              " (complete)"}
           </DebugLine>
-        ))}
-      </DebugSection>
+
+          {(imageLoadingProgress.events || []).map((event, index) => (
+            <DebugLine key={index}>
+              {event.status === "loading" && (
+                <LoadingList>🔄 Loading {event.message}</LoadingList>
+              )}
+              {event.status === "success" && (
+                <SuccessList>✅ Loaded {event.message}</SuccessList>
+              )}
+              {event.status === "error" && (
+                <ErrorList>❌ Failed to load {event.message}</ErrorList>
+              )}
+            </DebugLine>
+          ))}
+        </DebugSection>
+      )}
     </AppContainer>
   );
 }
