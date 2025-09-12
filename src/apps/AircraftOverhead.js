@@ -5,27 +5,31 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { API_BASE_URL } from "../config/api";
 import { Loading } from "../components/Loading";
+import { faPlane } from "@fortawesome/free-solid-svg-icons";
 
-// Fix for default markers in react-leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png")
-});
+// Color scheme
+const AIRCRAFT_COLOR = "rgb(47, 255, 54)";
+const AIRCRAFT_COLOR_ALPHA = "rgba(47, 255, 54, 1)";
 
-// Custom airplane icon function that accepts rotation
+// Feature flags
+const SHOW_RADIUS_CIRCLE = true; // Set to false to hide the radius circle
+
+// Custom airplane icon function using Font Awesome airplane icon that accepts rotation
 const createAircraftIcon = (heading = 0) => {
+  const svgString = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${faPlane.icon[0]} ${
+    faPlane.icon[1]
+  }" width="24" height="24">
+      <g transform="rotate(${heading} ${faPlane.icon[0] / 2} ${
+    faPlane.icon[1] / 2
+  })">
+        <path fill="${AIRCRAFT_COLOR}" d="${faPlane.icon[4]}"/>
+      </g>
+    </svg>
+  `;
+
   return new L.Icon({
-    iconUrl:
-      "data:image/svg+xml;base64," +
-      btoa(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgb(47, 255, 54)" width="24" height="24">
-        <g transform="rotate(${heading} 12 12)">
-          <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
-        </g>
-      </svg>
-    `),
+    iconUrl: `data:image/svg+xml;base64,${btoa(svgString)}`,
     iconSize: [24, 24],
     iconAnchor: [12, 12],
     popupAnchor: [0, -12]
@@ -67,10 +71,10 @@ const InfoBox = styled.div`
   z-index: 1000;
   min-width: 100px;
   line-height: 1;
-  color: rgb(47, 255, 54);
+  color: ${AIRCRAFT_COLOR};
   font-family: monospace;
   text-transform: uppercase;
-  text-shadow: 0 0.5rem 2rem rgba(47, 255, 54, 1);
+  text-shadow: 0 0.5rem 2rem ${AIRCRAFT_COLOR_ALPHA};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -89,7 +93,7 @@ const InfoLine = styled.div`
 
 // Custom component to render the radius circle
 const RangeCircle = ({ center, radius }) => {
-  if (!center || radius == null) return null;
+  if (!SHOW_RADIUS_CIRCLE || !center || radius == null) return null;
 
   // Convert radius to number if it's a string
   const radiusNum = typeof radius === "string" ? parseFloat(radius) : radius;
@@ -105,8 +109,8 @@ const RangeCircle = ({ center, radius }) => {
       center={center}
       radius={radiusInMeters}
       pathOptions={{
-        color: "rgb(47, 255, 54)",
-        fillColor: "rgb(47, 255, 54)",
+        color: AIRCRAFT_COLOR,
+        fillColor: AIRCRAFT_COLOR,
         fillOpacity: 0.1,
         weight: 2,
         opacity: 0.5
