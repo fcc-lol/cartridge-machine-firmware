@@ -9,7 +9,7 @@ import { faSatellite } from "@fortawesome/free-solid-svg-icons";
 
 // Color scheme
 const SATELLITE_COLOR = "rgb(255, 255, 255)";
-const SATELLITE_COLOR_ALPHA = "rgb(255, 255, 255)";
+const SATELLITE_COLOR_SHADOW = "rgb(0, 0, 0)";
 
 // Feature flags
 const SHOW_RADIUS_CIRCLE = false; // Set to false to hide the radius circle
@@ -68,7 +68,7 @@ const InfoBox = styled.div`
   color: ${SATELLITE_COLOR};
   font-family: monospace;
   text-transform: uppercase;
-  text-shadow: 0 0.5rem 2rem ${SATELLITE_COLOR_ALPHA};
+  text-shadow: 0 0.5rem 2rem ${SATELLITE_COLOR_SHADOW};
   display: flex;
   flex-direction: column;
   align-items: flex-start;

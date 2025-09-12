@@ -9,7 +9,7 @@ import { faPlane } from "@fortawesome/free-solid-svg-icons";
 
 // Color scheme
 const AIRCRAFT_COLOR = "rgb(47, 255, 54)";
-const AIRCRAFT_COLOR_ALPHA = "rgba(47, 255, 54, 1)";
+const AIRCRAFT_COLOR_SHADOW = "rgba(47, 255, 54, 1)";
 
 // Feature flags
 const SHOW_RADIUS_CIRCLE = true; // Set to false to hide the radius circle
@@ -74,7 +74,7 @@ const InfoBox = styled.div`
   color: ${AIRCRAFT_COLOR};
   font-family: monospace;
   text-transform: uppercase;
-  text-shadow: 0 0.5rem 2rem ${AIRCRAFT_COLOR_ALPHA};
+  text-shadow: 0 0.5rem 2rem ${AIRCRAFT_COLOR_SHADOW};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
