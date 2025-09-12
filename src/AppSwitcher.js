@@ -240,7 +240,8 @@ function App() {
       // List of apps that need the fccApiKey
       const appsNeedingApiKey = [
         "AircraftOverhead",
-        "WholeEarthSatelliteImage"
+        "WholeEarthSatelliteImage",
+        "SatellitesOverhead"
       ];
 
       return (
