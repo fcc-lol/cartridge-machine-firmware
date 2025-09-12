@@ -190,9 +190,6 @@ const SatelliteInfoOverlay = ({
             }}
           >
             {satellite.satname && <InfoLine>{satellite.satname}</InfoLine>}
-            {satellite.intDesignator && (
-              <InfoLine>{satellite.intDesignator}</InfoLine>
-            )}
             {satellite.satalt && (
               <InfoLine>{formatAltitude(satellite.satalt)}</InfoLine>
             )}
@@ -256,7 +253,7 @@ const SatellitesOverhead = ({ fccApiKey }) => {
   const formatAltitude = (altitude) => {
     if (typeof altitude === "number") {
       if (altitude < 0) return null;
-      return `${altitude.toLocaleString()} km`;
+      return `${Math.round(altitude).toLocaleString()} km`;
     }
     return "Unknown";
   };
