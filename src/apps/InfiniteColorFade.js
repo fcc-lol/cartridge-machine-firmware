@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-
-const ColorContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.1s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import AppContainer from "../components/AppContainer";
 
 const ColorInfo = styled.div`
   position: absolute;
@@ -88,7 +78,14 @@ const InfiniteColorFade = () => {
   const backgroundColor = `hsl(${hue}, 100%, 50%)`;
 
   return (
-    <ColorContainer style={{ backgroundColor }} onClick={toggleInfo}>
+    <AppContainer
+      center
+      style={{
+        backgroundColor,
+        transition: "background-color 0.1s ease-in-out"
+      }}
+      onClick={toggleInfo}
+    >
       {showInfo && (
         <ColorInfo>
           <div>Hue: {hue}°</div>
@@ -101,7 +98,7 @@ const InfiniteColorFade = () => {
           </div>
         </ColorInfo>
       )}
-    </ColorContainer>
+    </AppContainer>
   );
 };
 

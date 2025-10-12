@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { API_BASE_URL } from "../config/api";
 import { Loading } from "../components/Loading";
 import { faPlane } from "@fortawesome/free-solid-svg-icons";
+import AppContainer from "../components/AppContainer";
 
 // Color scheme
 const AIRCRAFT_COLOR = "rgb(47, 255, 54)";
@@ -35,13 +36,6 @@ const createAircraftIcon = (heading = 0) => {
     popupAnchor: [0, -12]
   });
 };
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-`;
 
 const MapWrapper = styled.div`
   height: 100%;
@@ -263,9 +257,9 @@ const AircraftOverhead = ({ fccApiKey }) => {
 
   if (loading) {
     return (
-      <Container>
+      <AppContainer center>
         <Loading />
-      </Container>
+      </AppContainer>
     );
   }
 
@@ -276,7 +270,7 @@ const AircraftOverhead = ({ fccApiKey }) => {
   const aircraftWithCoords = aircraft.filter((plane) => plane.lat && plane.lon);
 
   return (
-    <Container>
+    <AppContainer>
       <MapWrapper>
         <MapContainer
           center={defaultLocation}
@@ -307,7 +301,7 @@ const AircraftOverhead = ({ fccApiKey }) => {
           />
         </MapContainer>
       </MapWrapper>
-    </Container>
+    </AppContainer>
   );
 };
 

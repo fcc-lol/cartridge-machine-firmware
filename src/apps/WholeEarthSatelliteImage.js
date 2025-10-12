@@ -4,6 +4,7 @@ import { API_BASE_URL } from "../config/api";
 import { Loading } from "../components/Loading";
 import { Error } from "../components/Error";
 import { imageCache } from "../services/imagePreloader";
+import AppContainer from "../components/AppContainer";
 
 // Function to manage cache size
 const manageCacheSize = () => {
@@ -14,19 +15,6 @@ const manageCacheSize = () => {
     entriesToRemove.forEach((key) => imageCache.delete(key));
   }
 };
-
-const EarthImageContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const EarthImage = styled.img`
   width: 80%;
@@ -247,7 +235,7 @@ function WholeEarthSatelliteImage({ fccApiKey }) {
     <>
       {loading && loadingProgress.total > 0 && <Loading />}
 
-      <EarthImageContainer>
+      <AppContainer fullscreen center>
         {error && <Error message={error} />}
 
         {currentImage && (
@@ -282,7 +270,7 @@ function WholeEarthSatelliteImage({ fccApiKey }) {
             </TimeDisplay>
           </InfoPanel>
         )}
-      </EarthImageContainer>
+      </AppContainer>
     </>
   );
 }

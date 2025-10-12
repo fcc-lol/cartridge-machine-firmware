@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { API_BASE_URL } from "../config/api";
 import { Loading } from "../components/Loading";
 import { faSatellite } from "@fortawesome/free-solid-svg-icons";
+import AppContainer from "../components/AppContainer";
 
 // Color scheme
 const SATELLITE_COLOR = "rgb(255, 255, 255)";
@@ -29,13 +30,6 @@ const createSatelliteIcon = () => {
     popupAnchor: [0, -12]
   });
 };
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-`;
 
 const MapWrapper = styled.div`
   height: 100%;
@@ -268,9 +262,9 @@ const SatellitesOverhead = ({ fccApiKey }) => {
 
   if (loading) {
     return (
-      <Container>
+      <AppContainer center>
         <Loading />
-      </Container>
+      </AppContainer>
     );
   }
 
@@ -283,7 +277,7 @@ const SatellitesOverhead = ({ fccApiKey }) => {
   );
 
   return (
-    <Container>
+    <AppContainer>
       <MapWrapper>
         <MapContainer
           center={defaultLocation}
@@ -314,7 +308,7 @@ const SatellitesOverhead = ({ fccApiKey }) => {
           />
         </MapContainer>
       </MapWrapper>
-    </Container>
+    </AppContainer>
   );
 };
 

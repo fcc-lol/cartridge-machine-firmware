@@ -2,20 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { Loading } from "../components/Loading";
 import { Error } from "../components/Error";
-
-const WeatherContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: black;
-`;
+import AppContainer from "../components/AppContainer";
 
 const WeatherImage = styled.img`
   height: 100%;
@@ -109,7 +96,7 @@ function USWeatherMap() {
   };
 
   return (
-    <WeatherContainer>
+    <AppContainer fullscreen center background="black">
       {error && <Error message={error} />}
 
       {loading ? (
@@ -127,7 +114,7 @@ function USWeatherMap() {
       <InfoPanel>
         <RefreshInfo>{formatNextRefresh(nextRefresh)}</RefreshInfo>
       </InfoPanel>
-    </WeatherContainer>
+    </AppContainer>
   );
 }
 
