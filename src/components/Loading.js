@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { InstructionsMessage } from "./Instructions";
 
 const LoadingMessage = styled(InstructionsMessage)`
-  margin-top: 0;
+  margin-top: -1rem;
 `;
 
 export const Loading = ({ message }) => {
