@@ -3,6 +3,13 @@ import styled from "styled-components";
 import { Loading } from "../components/Loading";
 import { Error } from "../components/Error";
 
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+`;
+
 const SlideshowContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -34,11 +41,17 @@ function FCCMomentsSlideshow() {
     setLoading(false);
   };
 
+  if (loading) {
+    return (
+      <Container>
+        <Loading />
+      </Container>
+    );
+  }
+
   return (
     <SlideshowContainer>
       {error && <Error message={error} />}
-
-      {loading && <Loading />}
 
       <SlideshowIframe
         src="https://moments.fcc.lol/slideshow"
