@@ -48,7 +48,8 @@
   "0010177791": {
     "color": "RED",
     "type": "STANDARD",
-    "action": "USWeatherMap"
+    "action": "open_app",
+    "app": "USWeatherMap"
   },
   "0008521758": {
     "color": "RED",
