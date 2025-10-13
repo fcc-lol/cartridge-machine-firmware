@@ -66,7 +66,7 @@
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "InfiniteColorFade"
+    "app": "SunDashboard"
   },
   "0008721413": {
     "color": "RED",
@@ -90,7 +90,7 @@
     "color": "GREEN",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "SunDashboard"
+    "app": "InfiniteColorFade"
   },
   "0010306975": {
     "color": "GREEN",
@@ -119,6 +119,6 @@
     "color": "BLUE",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "WholeEarthSatelliteImage"
+    "app": "MoonDashboard"
   }
 }
