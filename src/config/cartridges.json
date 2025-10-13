@@ -66,7 +66,7 @@
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "Moments"
+    "app": "InfiniteColorFade"
   },
   "0008721413": {
     "color": "RED",
@@ -84,7 +84,7 @@
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "Moments"
+    "app": "USWeatherMap"
   },
   "0010432823": {
     "color": "GREEN",
