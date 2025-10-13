@@ -6,11 +6,11 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  width: calc(100% - 3rem);
-  height: calc(100% - 3rem);
-  gap: 0;
+  width: calc(100% - 4rem);
+  height: calc(100% - 4rem);
+  gap: 2rem;
   background: black;
-  padding: 1rem;
+  padding: 2rem;
 `;
 
 function LiveCameras() {

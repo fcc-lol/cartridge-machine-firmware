@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 const VideoContainer = styled.div`
   position: relative;
-  width: calc(100% - 1rem);
-  height: calc(100% - 1rem);
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,7 +13,6 @@ const VideoContainer = styled.div`
   transition: opacity 0.5s ease-in;
   background: black;
   border-radius: 1rem;
-  margin: 1rem;
 
   &.video-loaded {
     opacity: 1;
