@@ -48,13 +48,13 @@
   "0010177791": {
     "color": "RED",
     "type": "STANDARD",
-    "action": "toggle_debug"
+    "action": "USWeatherMap"
   },
   "0008521758": {
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "Moments"
+    "app": "InfiniteColorFade"
   },
   "0009193929": {
     "color": "RED",
