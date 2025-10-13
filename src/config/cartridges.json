@@ -2,8 +2,7 @@
   "0010177791": {
     "color": "RED",
     "type": "STANDARD",
-    "action": "open_app",
-    "app": "toggle_debug"
+    "action": "toggle_debug"
   },
   "0008521758": {
     "color": "RED",
