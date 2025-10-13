@@ -55,13 +55,13 @@
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "InfiniteColorFade"
+    "app": "USStateSeals"
   },
   "0009193929": {
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "Moments"
+    "app": "InfiniteColorFade"
   },
   "0008522724": {
     "color": "RED",
