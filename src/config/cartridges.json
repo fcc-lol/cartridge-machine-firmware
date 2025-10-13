@@ -1,4 +1,44 @@
 {
+  "0008858985": {
+    "color": "ORANGE",
+    "type": "STANDARD",
+    "action": "toggle_debug"
+  },
+  "0008708792": {
+    "color": "ORANGE",
+    "type": "STANDARD",
+    "action": "refresh"
+  },
+  "0008477112": {
+    "color": "RED",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "Moments"
+  },
+  "0008860981": {
+    "color": "BLUE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "WholeEarthSatelliteImage"
+  },
+  "0010451634": {
+    "color": "GREEN",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "AircraftOverhead"
+  },
+  "0010184850": {
+    "color": "BLUE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "AircraftOverhead"
+  },
+  "0026319016": {
+    "color": "GREEN",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "WholeEarthSatelliteImage"
+  },
   "0010177791": {
     "color": "RED",
     "type": "STANDARD",
@@ -17,12 +57,6 @@
     "app": "Moments"
   },
   "0008522724": {
-    "color": "RED",
-    "type": "STANDARD",
-    "action": "open_app",
-    "app": "Moments"
-  },
-  "0008477112": {
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
@@ -52,28 +86,11 @@
     "action": "open_app",
     "app": "AircraftOverhead"
   },
-  "0026319016": {
-    "color": "GREEN",
-    "type": "STANDARD",
-    "action": "open_app",
-    "app": "AircraftOverhead"
-  },
-  "0010451634": {
-    "color": "GREEN",
-    "type": "STANDARD",
-    "action": "open_app",
-    "app": "AircraftOverhead"
-  },
   "0010306975": {
     "color": "GREEN",
     "type": "STANDARD",
     "action": "open_app",
     "app": "AircraftOverhead"
-  },
-  "0008708792": {
-    "color": "ORANGE",
-    "type": "STANDARD",
-    "action": "refresh"
   },
   "0010388313": {
     "color": "ORANGE",
@@ -86,15 +103,9 @@
     "action": "open_app",
     "app": "USWeatherMap"
   },
-  "0008858985": {
-    "color": "ORANGE",
-    "type": "STANDARD",
-    "action": "open_app",
-    "app": "USWeatherMap"
-  },
   "0009684980": {
     "color": "ORANGE",
-    "type": "DEMO",
+    "type": "STANDARD",
     "action": "open_app",
     "app": "USWeatherMap"
   },
@@ -104,19 +115,7 @@
     "action": "open_app",
     "app": "WholeEarthSatelliteImage"
   },
-  "0008860981": {
-    "color": "BLUE",
-    "type": "STANDARD",
-    "action": "open_app",
-    "app": "WholeEarthSatelliteImage"
-  },
   "0008502093": {
-    "color": "BLUE",
-    "type": "STANDARD",
-    "action": "open_app",
-    "app": "WholeEarthSatelliteImage"
-  },
-  "0010184850": {
     "color": "BLUE",
     "type": "STANDARD",
     "action": "open_app",
