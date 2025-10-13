@@ -99,6 +99,7 @@ function App() {
   const [activeApp, setActiveApp] = useState(null);
   const [lastKeyTime, setLastKeyTime] = useState(0);
   const [showDebugSection, setShowDebugSection] = useState(false);
+  const [lastCartridgeId, setLastCartridgeId] = useState(null);
   const [imageLoadingProgress, setImageLoadingProgress] = useState({
     loaded: 0,
     total: 0,
@@ -195,6 +196,7 @@ function App() {
             return;
           } else if (cartridge.action === "open_app") {
             setActiveApp(newInput);
+            setLastCartridgeId(newInput);
             setCurrentInput(""); // Clear input after successful match
           }
         }
@@ -259,7 +261,9 @@ function App() {
 
               <DebugLine>
                 <strong>Active Cartridge ID:</strong>{" "}
-                {activeApp.startsWith("url_") ? "URL Parameter" : activeApp}
+                {activeApp.startsWith("url_")
+                  ? "URL Parameter"
+                  : lastCartridgeId || activeApp}
               </DebugLine>
 
               <DebugLine>
@@ -302,10 +306,12 @@ function App() {
         <DebugSection>
           <DebugTitle>Debug Information</DebugTitle>
 
-          {activeApp && (
+          {(activeApp || lastCartridgeId) && (
             <DebugLine>
-              <strong>Active Cartridge ID:</strong>{" "}
-              {activeApp.startsWith("url_") ? "URL Parameter" : activeApp}
+              <strong>Last Cartridge ID:</strong>{" "}
+              {activeApp && activeApp.startsWith("url_")
+                ? "URL Parameter"
+                : lastCartridgeId || activeApp || "None"}
             </DebugLine>
           )}
 
