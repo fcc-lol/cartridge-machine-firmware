@@ -49,7 +49,7 @@
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "USWeatherMap"
+    "app": "HeadlinesBusStyle"
   },
   "0008521758": {
     "color": "RED",
@@ -73,7 +73,7 @@
     "color": "RED",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "Moments"
+    "app": "HeadlinesSubwayStyle"
   },
   "0010391937": {
     "color": "RED",
