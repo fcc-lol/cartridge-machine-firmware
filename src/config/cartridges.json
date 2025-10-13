@@ -79,8 +79,7 @@
   "0010388313": {
     "color": "ORANGE",
     "type": "STANDARD",
-    "action": "open_app",
-    "app": "USWeatherMap"
+    "action": "toggle_debug"
   },
   "0008440795": {
     "color": "ORANGE",

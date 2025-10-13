@@ -98,15 +98,13 @@ function App() {
   const [currentInput, setCurrentInput] = useState("");
   const [activeApp, setActiveApp] = useState(null);
   const [lastKeyTime, setLastKeyTime] = useState(0);
+  const [showDebugSection, setShowDebugSection] = useState(false);
   const [imageLoadingProgress, setImageLoadingProgress] = useState({
     loaded: 0,
     total: 0,
     isLoading: false,
     events: []
   });
-
-  // Hardcoded variable to control DebugSection visibility
-  const SHOW_DEBUG_SECTION = false;
 
   // Function to get URL parameters
   const getUrlParam = (param) => {
@@ -191,6 +189,10 @@ function App() {
           if (cartridge.action === "refresh") {
             window.location.reload();
             return;
+          } else if (cartridge.action === "toggle_debug") {
+            setShowDebugSection((prev) => !prev);
+            setCurrentInput(""); // Clear input after successful match
+            return;
           } else if (cartridge.action === "open_app") {
             setActiveApp(newInput);
             setCurrentInput(""); // Clear input after successful match
@@ -251,6 +253,40 @@ function App() {
           ) : (
             <AppComponent />
           )}
+          {showDebugSection && (
+            <DebugSection>
+              <DebugTitle>Debug Information</DebugTitle>
+
+              <DebugLine>
+                <strong>Active Cartridge ID:</strong>{" "}
+                {activeApp.startsWith("url_") ? "URL Parameter" : activeApp}
+              </DebugLine>
+
+              <DebugLine>
+                <strong>Image Preloader Progress:</strong>{" "}
+                {imageLoadingProgress.loaded} / {imageLoadingProgress.total}{" "}
+                loaded
+                {imageLoadingProgress.isLoading && " (loading...)"}
+                {!imageLoadingProgress.isLoading &&
+                  imageLoadingProgress.total > 0 &&
+                  " (complete)"}
+              </DebugLine>
+
+              {(imageLoadingProgress.events || []).map((event, index) => (
+                <DebugLine key={index}>
+                  {event.status === "loading" && (
+                    <LoadingList>🔄 Loading {event.message}</LoadingList>
+                  )}
+                  {event.status === "success" && (
+                    <SuccessList>✅ Loaded {event.message}</SuccessList>
+                  )}
+                  {event.status === "error" && (
+                    <ErrorList>❌ Failed to load {event.message}</ErrorList>
+                  )}
+                </DebugLine>
+              ))}
+            </DebugSection>
+          )}
         </AppContainer>
       );
     }
@@ -262,13 +298,20 @@ function App() {
       <MainContent>
         <Instructions>Insert a cartridge</Instructions>
       </MainContent>
-      {SHOW_DEBUG_SECTION && (
+      {showDebugSection && (
         <DebugSection>
-          <DebugTitle>Image Preloader Debug</DebugTitle>
+          <DebugTitle>Debug Information</DebugTitle>
+
+          {activeApp && (
+            <DebugLine>
+              <strong>Active Cartridge ID:</strong>{" "}
+              {activeApp.startsWith("url_") ? "URL Parameter" : activeApp}
+            </DebugLine>
+          )}
 
           <DebugLine>
-            Progress: {imageLoadingProgress.loaded} /{" "}
-            {imageLoadingProgress.total} loaded
+            <strong>Image Preloader Progress:</strong>{" "}
+            {imageLoadingProgress.loaded} / {imageLoadingProgress.total} loaded
             {imageLoadingProgress.isLoading && " (loading...)"}
             {!imageLoadingProgress.isLoading &&
               imageLoadingProgress.total > 0 &&
