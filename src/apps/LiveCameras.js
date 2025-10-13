@@ -8,7 +8,7 @@ const GridContainer = styled.div`
   grid-template-rows: 1fr 1fr;
   width: calc(100% - 4rem);
   height: calc(100% - 4rem);
-  gap: 2rem;
+  gap: 1.5rem;
   background: black;
   padding: 2rem;
 `;
