@@ -21,6 +21,12 @@
     "action": "open_app",
     "app": "WholeEarthSatelliteImage"
   },
+  "0008528012": {
+    "color": "BLUE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "SatellitesOverhead"
+  },
   "0010451634": {
     "color": "GREEN",
     "type": "STANDARD",
@@ -84,13 +90,13 @@
     "color": "GREEN",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "AircraftOverhead"
+    "app": "SunDashboard"
   },
   "0010306975": {
     "color": "GREEN",
     "type": "STANDARD",
     "action": "open_app",
-    "app": "AircraftOverhead"
+    "app": "MoonDashboard"
   },
   "0010388313": {
     "color": "ORANGE",
@@ -108,12 +114,6 @@
     "type": "STANDARD",
     "action": "open_app",
     "app": "USWeatherMap"
-  },
-  "0008528012": {
-    "color": "BLUE",
-    "type": "STANDARD",
-    "action": "open_app",
-    "app": "WholeEarthSatelliteImage"
   },
   "0008502093": {
     "color": "BLUE",
