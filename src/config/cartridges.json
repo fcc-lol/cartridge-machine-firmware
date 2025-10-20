@@ -121,5 +121,65 @@
     "type": "STANDARD",
     "action": "open_app",
     "app": "MoonDashboard"
+  },
+  "0012124479": {
+    "color": "WHITE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "SunDashboard"
+  },
+  "0012021106": {
+    "color": "WHITE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "MoonDashboard"
+  },
+  "0012850302": {
+    "color": "WHITE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "WholeEarthSatelliteImage"
+  },
+  "0012043203": {
+    "color": "WHITE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "LiveCameras"
+  },
+  "0012907669": {
+    "color": "WHITE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "SatellitesOverhead"
+  },
+  "0010449582": {
+    "color": "PURPLE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "Moments"
+  },
+  "0012863536": {
+    "color": "PURPLE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "InfiniteColorFade"
+  },
+  "0013889992": {
+    "color": "PURPLE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "HeadlinesBusStyle"
+  },
+  "0009055323": {
+    "color": "PURPLE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "AircraftOverhead"
+  },
+  "0012053247": {
+    "color": "PURPLE",
+    "type": "STANDARD",
+    "action": "open_app",
+    "app": "USStateSeals"
   }
 }
